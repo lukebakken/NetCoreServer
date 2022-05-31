@@ -17,9 +17,13 @@ start() ->
         % ]}
     ],
     io:format("Options: ~p~n", [Options]),
-    {ok, Socket} = ssl:connect("server.example.com", 2222, Options),
-    io:format("Socket: ~p~n", [Socket]),
-    {ok, Info} = ssl:connection_information(Socket),
-    io:format("Info: ~p~n", [Info]),
-    ok = ssl:close(Socket),
+    case ssl:connect("server.example.com", 2222, Options) of
+        {ok, Socket} ->
+            io:format("Socket: ~p~n", [Socket]),
+            {ok, Info} = ssl:connection_information(Socket),
+            io:format("Info: ~p~n", [Info]),
+            ok = ssl:close(Socket);
+        Error ->
+            io:format("ssl:connect error: ~p~n", [Error])
+    end,
     init:stop().
